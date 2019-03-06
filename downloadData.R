@@ -76,12 +76,12 @@ raw.sensitivity <- raw.sensitivity[, -c(1, 2)]
 raw.sensitivity <- array(c(as.matrix(raw.sensitivity[ , 1:con_tested]), as.matrix(raw.sensitivity[,(con_tested+1):(2*con_tested)])), c(nrow(raw.sensitivity), con_tested, 2),
                          dimnames=list(rownames(raw.sensitivity), colnames(raw.sensitivity[ , 1:con_tested]), c("Dose", "Viability")))
 
-
-drugconc <- drugconc[rownames(raw.sensitivity),]
-duration <- rep(x=72, length=nrow(drugconc))
-sensitivityInfo <- cbind(drugconc, "duration_h"=duration)
-profiles <- profiles[rownames(sensitivityInfo),]
-# recomputed <- .calculateFromRaw(raw.sensitivity,dose.range=c(log10(2), log10(1000)), cap=100)
+## TODO: make sure to add these lines to the makePSet:
+# drugconc <- drugconc[rownames(raw.sensitivity),]
+# duration <- rep(x=72, length=nrow(drugconc))
+# sensitivityInfo <- cbind(drugconc, "duration_h"=duration)
+# profiles <- profiles[rownames(sensitivityInfo),]
+# # recomputed <- .calculateFromRaw(raw.sensitivity,dose.range=c(log10(2), log10(1000)), cap=100)
 myfn <- file.path("/pfs/out/", "GDSC_sens_recomputed.RData")
 if(!file.exists(myfn)){
   recomputed <- .calculateFromRaw(raw.sensitivity, cap=100)
