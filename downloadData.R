@@ -84,7 +84,7 @@ raw.sensitivity <- array(c(as.matrix(raw.sensitivity[ , 1:con_tested]), as.matri
 # # recomputed <- .calculateFromRaw(raw.sensitivity,dose.range=c(log10(2), log10(1000)), cap=100)
 myfn <- file.path("/pfs/out/", "GDSC_sens_recomputed.RData")
 if(!file.exists(myfn)){
-  recomputed <- PharmacoGxPrivate:::.calculateFromRaw(raw.sensitivity, cap=100)
+  recomputed <- PharmacoGx:::.calculateFromRaw(raw.sensitivity, cap=100)
   save(recomputed, file=myfn)
 } else {
   load(myfn, verbose=TRUE)
