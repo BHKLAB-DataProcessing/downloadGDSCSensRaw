@@ -63,7 +63,6 @@ function(path.data="/pfs/out", result.type=c("array", "list")){
 }
 
 raw.sensitivity <- getGDSCrawData(result.type="list")
-save(raw.sensitivity, file="GDSC_sens_raw.RData")
 
 con_tested <- raw.sensitivity$concentrations.no
 raw.sensitivity <- t(raw.sensitivity$data)
@@ -75,6 +74,18 @@ rownames(raw.sensitivity)  <- paste(as.character(raw.sensitivity[ , 2]),raw.sens
 raw.sensitivity <- raw.sensitivity[, -c(1, 2)]
 raw.sensitivity <- array(c(as.matrix(raw.sensitivity[ , 1:con_tested]), as.matrix(raw.sensitivity[,(con_tested+1):(2*con_tested)])), c(nrow(raw.sensitivity), con_tested, 2),
                          dimnames=list(rownames(raw.sensitivity), colnames(raw.sensitivity[ , 1:con_tested]), c("Dose", "Viability")))
+save(raw.sensitivity, file="/pfs/out/GDSC_sens_raw.RData")
+
+raw.sensitivity.x <- parallel::splitIndices(nrow(raw.sensitivity), floor(nrow(raw.sensitivity)/1000))
+
+dir.create("/pfs/out/slices/")
+
+for(i in seq_along(raw.sensitivity.x)){
+
+  slce <- raw.sensitivity[raw.sensitivity.x,,]
+  saveRDS(slce, file=paste0("/pfs/out/slices/gdsc_raw_sens_", i, ".rds"))
+
+}
 
 ## TODO: make sure to add these lines to the makePSet:
 # drugconc <- drugconc[rownames(raw.sensitivity),]
@@ -82,10 +93,10 @@ raw.sensitivity <- array(c(as.matrix(raw.sensitivity[ , 1:con_tested]), as.matri
 # sensitivityInfo <- cbind(drugconc, "duration_h"=duration)
 # profiles <- profiles[rownames(sensitivityInfo),]
 # # recomputed <- .calculateFromRaw(raw.sensitivity,dose.range=c(log10(2), log10(1000)), cap=100)
-myfn <- file.path("/pfs/out/", "GDSC_sens_recomputed.RData")
-if(!file.exists(myfn)){
-  recomputed <- PharmacoGx:::.calculateFromRaw(raw.sensitivity, cap=100)
-  save(recomputed, file=myfn)
-} else {
-  load(myfn, verbose=TRUE)
-}
+# myfn <- file.path("/pfs/out/", "GDSC_sens_recomputed.RData")
+# if(!file.exists(myfn)){
+#   recomputed <- PharmacoGx:::.calculateFromRaw(raw.sensitivity, cap=100)
+#   save(recomputed, file=myfn)
+# } else {
+#   load(myfn, verbose=TRUE)
+# }
