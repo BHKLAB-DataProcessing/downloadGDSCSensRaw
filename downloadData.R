@@ -82,7 +82,7 @@ dir.create("/pfs/out/slices/")
 
 for(i in seq_along(raw.sensitivity.x)){
 
-  slce <- raw.sensitivity[raw.sensitivity.x,,]
+  slce <- raw.sensitivity[raw.sensitivity.x[[i]],,]
   saveRDS(slce, file=paste0("/pfs/out/slices/gdsc_raw_sens_", i, ".rds"))
 
 }
