@@ -18,6 +18,8 @@ function(path.data="/pfs/out", result.type=c("array", "list")){
   }
   res <- unzip(zipfile=file.path(path.data, "dwl", sprintf("%s.zip", archivn)),exdir=file.path(path.data, "dwl"))
   gdsc.raw.drug.sensitivity <- read.csv(myfn, stringsAsFactors=FALSE)
+
+
   
   concentrations.no <- length(grep("raw", names(gdsc.raw.drug.sensitivity)))
   
@@ -74,7 +76,7 @@ rownames(raw.sensitivity)  <- paste(as.character(raw.sensitivity[ , 2]),raw.sens
 raw.sensitivity <- raw.sensitivity[, -c(1, 2)]
 raw.sensitivity <- array(c(as.matrix(raw.sensitivity[ , 1:con_tested]), as.matrix(raw.sensitivity[,(con_tested+1):(2*con_tested)])), c(nrow(raw.sensitivity), con_tested, 2),
                          dimnames=list(rownames(raw.sensitivity), colnames(raw.sensitivity[ , 1:con_tested]), c("Dose", "Viability")))
-save(raw.sensitivity, file="/pfs/out/GDSC_sens_raw.RData")
+save(list(con_tested,raw.sensitivity), file="/pfs/out/GDSC_sens_raw.RData")
 
 raw.sensitivity.x <- parallel::splitIndices(nrow(raw.sensitivity), floor(nrow(raw.sensitivity)/1000))
 
