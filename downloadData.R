@@ -1,5 +1,5 @@
 library(downloader)
-library(PharmacoGxPrivate)
+library(PharmacoGx)
 
 options(stringsAsFactors=FALSE)
 
